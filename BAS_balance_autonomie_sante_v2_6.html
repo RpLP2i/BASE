@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>BAS — Balance · Autonomie · Santé</title>
+<style>
+:root{--bg:#f3f5f8;--panel:#fff;--ink:#172033;--muted:#687386;--line:#e3e8ef;--green:#16a34a;--orange:#ea580c;--red:#dc2626;--navy:#101827;--blue:#2563eb;--shadow:0 8px 26px rgba(20,32,55,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:var(--navy);color:white;padding:18px max(18px,calc((100% - 1180px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-weight:850;letter-spacing:.04em}.brand small{display:block;color:#aeb9ca;font-weight:500;letter-spacing:0;font-size:12px}
+header .status{font-size:12px;color:#cbd5e1}
+main{max-width:1180px;margin:22px auto;padding:0 16px 48px}
+.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:18px}.tab{border:1px solid var(--line);background:white;padding:10px 15px;border-radius:12px;font-weight:700;white-space:nowrap;cursor:pointer}.tab.active{background:var(--navy);color:white;border-color:var(--navy)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+h1,h2,h3,p{margin-top:0}h1{font-size:25px;margin-bottom:4px}h2{font-size:19px;margin-bottom:12px}h3{font-size:15px;margin-bottom:8px}
+.sub{color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+label{display:block;font-size:12px;font-weight:750;color:var(--muted);margin-bottom:6px}input,select{width:100%;border:1px solid #d7dee8;border-radius:10px;padding:10px 11px;font:inherit;background:white;color:var(--ink)}
+button{border:0;border-radius:11px;padding:11px 15px;font:700 14px inherit;cursor:pointer;background:#e9eef5;color:var(--ink)}button.primary{background:var(--navy);color:white}button.green{background:var(--green);color:white}button.orange{background:var(--orange);color:white}button.red{background:var(--red);color:white}button.outline{background:white;border:1px solid var(--line)}button:disabled{opacity:.45;cursor:not-allowed}
+.choice{display:flex;gap:8px;flex-wrap:wrap}.choice button{flex:1;min-width:90px;border:2px solid transparent}.choice button.selected{outline:2px solid var(--navy);outline-offset:1px}
+.color-green{background:#dcfce7;color:#166534}.color-orange{background:#ffedd5;color:#9a3412}.color-red{background:#fee2e2;color:#991b1b}
+.post-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.station{border:1px solid var(--line);border-radius:13px;padding:12px;display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:10px}
+.station-code{background:#eef2f7;border-radius:10px;padding:9px;text-align:center;font-weight:850}.station strong{display:block}.station small{color:var(--muted)}
+.alert{border-radius:12px;padding:12px 14px;margin:8px 0;font-size:13px}.alert.good{background:#ecfdf3;color:#166534}.alert.warn{background:#fff7ed;color:#9a3412}.alert.bad{background:#fef2f2;color:#991b1b}
+.meters{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.meter{background:#f5f7fa;border-radius:12px;padding:11px}.meter span{display:block;color:var(--muted);font-size:11px}.meter b{font-size:21px}
+.bar{height:9px;background:#e8edf3;border-radius:99px;overflow:hidden;margin:6px 0 10px}.bar i{display:block;height:100%;background:#16a34a;border-radius:99px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.hidden{display:none!important}
+.run-screen{background:#101827;color:white;border-radius:20px;padding:22px}.run-screen .muted{color:#aab6c7}.clock{font-size:clamp(48px,10vw,84px);font-weight:850;letter-spacing:-.05em;text-align:center;font-variant-numeric:tabular-nums}.live-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.live-stat{background:#263449;border-radius:14px;padding:14px;text-align:center}.live-stat b{font-size:28px;display:block;font-variant-numeric:tabular-nums}.sequence{font-size:25px;font-weight:850}.progress{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin:14px 0}.progress span{height:9px;border-radius:9px;background:#405066}.progress span.done{background:#22c55e}.progress span.current{background:#f97316}
+.table{width:100%;border-collapse:collapse;font-size:13px}.table th,.table td{text-align:left;padding:9px;border-bottom:1px solid var(--line)}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.grid2,.post-list{grid-template-columns:1fr}.meters{grid-template-columns:repeat(2,1fr)}.panel{padding:15px}header{align-items:flex-start;flex-direction:column}.station{grid-template-columns:40px 1fr auto}}
+
+/* CTM V2 — direction artistique Sport Performance */
+:root{
+ --bg:#080d14;--panel:#111a26;--ink:#f3f7fb;--muted:#91a0b4;--line:#263447;
+ --green:#b6f23b;--orange:#ff9f43;--red:#ff555d;--navy:#080d14;--blue:#72a7ff;
+ --shadow:0 16px 42px rgba(0,0,0,.22)
+}
+body{background:radial-gradient(ellipse at 50% -20%,#1a2b3c 0%,#080d14 58%);color:var(--ink)}
+header{background:rgba(8,13,20,.94);border-bottom:1px solid #263447;backdrop-filter:blur(14px);padding-top:20px;padding-bottom:20px}
+.brand{font-size:19px;letter-spacing:.09em}.brand small{color:#9cacbf;letter-spacing:.15em;font-size:10px}
+header .status{color:#b6f23b}
+main{max-width:1260px;margin:28px auto}
+.tabs{gap:9px;padding:5px;background:#101925;border:1px solid #263447;border-radius:15px;width:max-content;max-width:100%}
+.tab{background:transparent;border:0;color:#9eacc0;border-radius:10px;padding:11px 17px}
+.tab.active{background:#b6f23b;color:#10170a;box-shadow:0 5px 18px rgba(182,242,59,.17)}
+.panel{background:linear-gradient(145deg,#131e2b,#101823);border:1px solid #29394d;border-radius:20px;box-shadow:var(--shadow);padding:23px}
+h1{font-size:clamp(25px,3vw,34px);letter-spacing:-.035em}
+h2{font-size:19px;letter-spacing:-.02em}
+h3{color:#eaf1f8}
+.sub,.sub small{color:#91a0b4}
+label{color:#a9b7c9;letter-spacing:.07em;font-size:10px}
+input,select{background:#0b131e;color:#f3f7fb;border:1px solid #304258;border-radius:11px}
+input:focus,select:focus{outline:2px solid rgba(182,242,59,.65);border-color:#b6f23b}
+button{background:#253448;color:#e9f0f8;border-radius:11px;transition:transform .15s,filter .15s}
+button:hover{filter:brightness(1.12);transform:translateY(-1px)}
+button.primary,button.green{background:#b6f23b;color:#10170a}
+button.orange{background:#ff9f43;color:#241407}
+button.red{background:#ff555d;color:#25090b}
+button.outline{background:#111d2b;border:1px solid #34475e;color:#dbe5f0}
+.choice button.selected{outline:2px solid #f4f8fc;outline-offset:2px}
+.color-green{background:rgba(182,242,59,.14);color:#c8ff69;border:1px solid rgba(182,242,59,.25)}
+.color-orange{background:rgba(255,159,67,.14);color:#ffb66d;border:1px solid rgba(255,159,67,.25)}
+.color-red{background:rgba(255,85,93,.14);color:#ff858a;border:1px solid rgba(255,85,93,.25)}
+.station{background:#0c1520;border:1px solid #2b3b50;border-radius:14px;padding:13px}
+.station-code{background:#26364a;color:#c9ff68}
+.station small{color:#91a0b4}
+.alert.good{background:rgba(182,242,59,.12);color:#d4ff8b;border:1px solid rgba(182,242,59,.22)}
+.alert.warn{background:rgba(255,159,67,.12);color:#ffc17f;border:1px solid rgba(255,159,67,.22)}
+.alert.bad{background:rgba(255,85,93,.12);color:#ff999d;border:1px solid rgba(255,85,93,.22)}
+.meter{background:#0b1520;border:1px solid #26374b}
+.meter span{color:#9cabc0}.meter b{color:#f5f8fb}
+.bar{background:#27364a}.bar i{background:linear-gradient(90deg,#8ccf20,#caff62)}
+.run-screen{background:linear-gradient(145deg,#111e2d,#080e17);border:1px solid #33465d;box-shadow:inset 0 1px rgba(255,255,255,.04)}
+.run-screen .muted{color:#9babc0}
+.clock{color:#f7fbff;text-shadow:0 0 34px rgba(182,242,59,.12);font-variant-numeric:tabular-nums}
+.live-stat{background:#1b2a3c;border:1px solid #30445d}
+.live-stat b{font-variant-numeric:tabular-nums}
+.progress span{background:#34445a}.progress span.done{background:#b6f23b}.progress span.current{background:#ff9f43}
+.table{color:#dce6f1}.table th{color:#aab9cc}.table th,.table td{border-bottom:1px solid #29394d}
+footer{color:#718198}
+#saveStatus{font-weight:700}
+@media(max-width:700px){
+ main{margin:16px auto;padding-bottom:92px}
+ .tabs{position:sticky;top:8px;z-index:5;width:100%;overflow:auto;justify-content:flex-start}
+ .tab{font-size:12px;padding:10px 12px}
+ .panel{padding:16px;border-radius:16px}
+ .station{grid-template-columns:38px 1fr;gap:8px}
+ .station select{grid-column:1/-1}
+ .live-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+ .live-stat{padding:10px 5px}.live-stat b{font-size:23px}.live-stat span{font-size:9px}
+}
+
+
+.exercise-library summary::marker{color:#8edb45}
+.exercise-library input,.exercise-library select{box-sizing:border-box}
+.exercise-library button.secondary{background:#26384d;color:#e8f0f8;border:1px solid #42566f;border-radius:9px;padding:9px 12px;cursor:pointer}
+
+/* BAS — identité visuelle modernisée */
+:root{
+ --bg:#070d13;--panel:#101b27;--ink:#f4f8fc;--muted:#9aabbd;--line:#26384a;
+ --green:#c4f45a;--orange:#ffad5c;--red:#ff626b;--navy:#070d13;
+ --shadow:0 18px 48px rgba(0,0,0,.28)
+}
+html{scroll-behavior:smooth}
+body{
+ background:
+ radial-gradient(ellipse at 12% -10%,rgba(70,115,142,.22),transparent 38%),
+ radial-gradient(ellipse at 100% 5%,rgba(151,194,70,.08),transparent 30%),
+ #070d13;
+ color:var(--ink);letter-spacing:.005em
+}
+header{
+ position:sticky;top:0;z-index:20;
+ background:rgba(7,13,19,.88);border-bottom:1px solid rgba(130,160,185,.18);
+ backdrop-filter:blur(18px);padding:15px max(18px,calc((100% - 1260px)/2));
+ min-height:76px
+}
+.brand{display:flex;align-items:center;gap:12px;font-size:23px;letter-spacing:.12em}
+.bas-mark{
+ display:grid;place-items:center;width:42px;height:42px;border-radius:14px;
+ background:linear-gradient(145deg,#d5ff75,#8bc83a);color:#101a0a;
+ font-size:23px;font-weight:950;box-shadow:0 7px 22px rgba(190,244,80,.2)
+}
+.bas-word{font-weight:950;line-height:1}
+.brand small{display:block;margin-top:5px;color:#9aabbd;font-size:9px;font-weight:750;letter-spacing:.16em}
+header .status{display:flex;align-items:center;gap:8px;color:#c4f45a;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#c4f45a;box-shadow:0 0 12px #c4f45a}
+main{max-width:1320px;margin:30px auto;padding:0 20px 56px}
+.tabs{
+ width:100%;display:flex;gap:8px;padding:7px;margin-bottom:22px;
+ background:rgba(16,27,39,.78);border:1px solid #26384a;border-radius:17px;
+ box-shadow:0 10px 28px rgba(0,0,0,.12)
+}
+.tab{flex:1;text-align:center;background:transparent;border:1px solid transparent;color:#a9b8c8;border-radius:12px;padding:13px 16px;font-size:13px}
+.tab.active{background:linear-gradient(135deg,#d1fa72,#a8df49);color:#111a0b;box-shadow:0 7px 20px rgba(190,244,80,.15)}
+.panel{
+ position:relative;overflow:hidden;
+ background:linear-gradient(145deg,rgba(19,32,46,.98),rgba(13,23,34,.98));
+ border:1px solid rgba(125,155,180,.2);border-radius:23px;
+ box-shadow:0 18px 45px rgba(0,0,0,.19);padding:clamp(18px,2.2vw,28px);
+ margin-bottom:18px
+}
+.panel h1{font-size:clamp(27px,3vw,38px);letter-spacing:-.045em;line-height:1.1}
+.panel h2{font-size:18px;font-weight:850;letter-spacing:-.025em}
+.panel h2:not(:first-child){margin-top:5px}
+.sub{color:#9aabbd;line-height:1.6}
+label{font-size:10px;color:#aebed0;letter-spacing:.1em;font-weight:850}
+input,select{
+ min-height:44px;background:#09131e;color:#f4f8fc;border:1px solid #31465b;
+ border-radius:12px;padding:11px 13px;transition:border-color .15s,box-shadow .15s
+}
+input:focus,select:focus{outline:0;border-color:#c4f45a;box-shadow:0 0 0 3px rgba(196,244,90,.12)}
+button{min-height:42px;border-radius:12px;padding:11px 16px;font-weight:800;letter-spacing:.005em}
+button.primary,button.green{background:linear-gradient(135deg,#d1fa72,#a8df49);color:#10190a}
+button.orange{background:linear-gradient(135deg,#ffc17d,#ff9b43);color:#241407}
+button.red{background:#ff626b;color:#25090b}
+button.outline{background:#111f2d;border:1px solid #344a60;color:#e2edf7}
+button:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.choice button{min-height:66px;border-radius:14px}
+.choice button.selected{outline:2px solid #eaf7d1;outline-offset:2px;box-shadow:0 0 0 5px rgba(196,244,90,.09)}
+.station{background:rgba(7,17,27,.45);border:1px solid #2b4054;border-radius:16px;padding:15px;transition:border-color .15s,transform .15s}
+.station:hover{border-color:#66824a;transform:translateY(-1px)}
+.station-code{background:linear-gradient(145deg,#d1fa72,#a8df49);color:#17200d;border-radius:11px;font-weight:950}
+.exercise-library{background:#0a1520!important;border-color:#31465b!important}
+.alert{border:1px solid transparent;border-radius:14px;padding:14px 16px}
+.meter{background:#0b1622;border:1px solid #26384a;border-radius:14px}
+.run-screen{
+ background:
+ radial-gradient(ellipse at 50% -20%,rgba(196,244,90,.12),transparent 42%),
+ linear-gradient(145deg,#101d2b,#080f18);
+ border:1px solid #33495d;border-radius:24px;padding:clamp(20px,3vw,34px);
+ box-shadow:0 22px 55px rgba(0,0,0,.3)
+}
+.clock{color:#d5ff75;text-shadow:0 0 28px rgba(196,244,90,.12);font-size:clamp(58px,11vw,100px)}
+.live-stat{background:rgba(35,53,72,.72);border:1px solid #3a5066;border-radius:16px}
+.live-stat b{color:#f5f9fc;font-size:clamp(25px,3vw,34px)}
+.sequence{font-size:clamp(23px,3vw,32px);letter-spacing:-.03em}
+.progress span{height:10px;background:#34485d}
+.progress span.done{background:#c4f45a}.progress span.current{background:#ffad5c;box-shadow:0 0 12px rgba(255,173,92,.35)}
+.table th{color:#aebed0;text-transform:uppercase;font-size:10px;letter-spacing:.08em}
+.table td{color:#e4edf5}
+footer{color:#788da2;padding:22px 12px;font-size:11px;letter-spacing:.06em}
+@media(max-width:760px){
+ header{position:relative;align-items:center;flex-direction:row}
+ .brand{font-size:20px}.bas-mark{width:38px;height:38px}
+ header .status{font-size:9px}
+ main{margin:18px auto;padding:0 12px 36px}
+ .tabs{overflow-x:auto}.tab{flex:0 0 auto}
+ .panel{border-radius:18px;padding:17px}
+ .live-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:430px){
+ header{align-items:flex-start;flex-direction:column;gap:10px}
+ .live-stat{padding:10px 4px}
+ .live-stat b{font-size:22px}
+}
+
+
+.rpe-panel,.oral-panel{background:linear-gradient(145deg,#101d2a,#0c1722);border:1px solid #344a60}
+#sessionRPE{max-width:520px;font-weight:750}
+#oralReview{width:100%;resize:vertical;min-height:130px;line-height:1.6}
+#dictationStatus{align-self:center}
+
+</style>
+</head>
+<body>
+<header><div class="brand"><span class="bas-mark">B</span><span class="bas-word">BAS <small>BALANCE · AUTONOMIE · SANTÉ</small></span></div><div class="status" id="saveStatus"><span class="status-dot"></span> Espace de préparation</div></header>
+<main>
+<nav class="tabs">
+<button class="tab active" data-tab="config">1 · Configuration</button>
+<button class="tab" data-tab="analysis">2 · Équilibre musculaire</button>
+<button class="tab" data-tab="run">3 · Réalisation</button>
+<button class="tab" data-tab="report">4 · Bilan</button>
+</nav>
+
+<section id="config" class="page">
+<div class="panel">
+<h1>Construire un circuit</h1><p class="sub">Définis l'intention, la charge et les 8 ateliers. L'analyse se met à jour automatiquement.</p>
+<h2>Étape 1 · Intensité et qualité</h2>
+<div class="grid">
+<div><label>INTENSITÉ</label><div class="choice" id="intensityChoices">
+<button class="color-green selected" data-value="vert">VERT<br><small>Endurance</small></button><button class="color-orange" data-value="orange">ORANGE<br><small>Résistance</small></button><button class="color-red" data-value="rouge">ROUGE<br><small>Vitesse</small></button></div></div>
+<div><label>QUALITÉ VISÉE</label><select id="quality"><option>Mobilité / fascia</option><option>Tonicité</option><option>Force</option></select></div>
+<div><label>NOM DU CIRCUIT</label><input id="circuitName" value="Mon circuit training" maxlength="50"></div>
+</div>
+<div style="height:16px"></div>
+<h2>Étape 2 · Charge de travail</h2>
+<div class="grid">
+<div><label>DURÉE OBJECTIF (MINUTES)</label><input type="number" id="targetDuration" min="1" max="180" value="15"></div>
+<div><label>NOMBRE DE TOURS</label><input type="number" id="rounds" min="1" max="20" placeholder="Libre · ex. 2"></div>
+<div><label>POSTE DE DÉPART</label><select id="startStation"></select></div>
+</div>
+<p class="sub" style="margin:10px 0 0">Durées de référence : vert 15 min · orange 12 min · rouge 10 min. La durée est modifiable. Le nombre de tours est libre ; laisse vide si tu souhaites décider pendant la séance.</p>
+</div>
+
+<div class="panel">
+<h2>Étape 3 · Les 8 ateliers</h2><p class="sub">Choisis un exercice par poste. Les alternatives sont proposées selon la famille de mouvement dominante.</p>
+<div id="stations" class="post-list"></div>
+</div>
+<div class="panel">
+<h2>Les 8 séquences de course</h2><p class="sub">Chaque course suit le poste correspondant. La distance est libre et modifiable.</p>
+<div id="courses" class="grid2"></div>
+<div class="actions"><button class="primary" id="toAnalysis">Analyser mon circuit →</button><button class="outline" id="saveConfig">Enregistrer la configuration</button><button class="outline" id="resetConfig">Réinitialiser</button></div>
+</div>
+</section>
+
+<section id="analysis" class="page hidden">
+<div class="panel"><h1>Analyse de l'équilibre musculaire</h1><p class="sub">Indicateurs pédagogiques calculés à partir des profils de sollicitation déclarés pour chaque exercice.</p>
+<div id="analysisAlerts"></div><div id="meters" class="meters"></div>
+<div class="actions"><button class="outline" id="backConfig">← Modifier les ateliers</button><button class="green" id="validateCircuit">Valider le circuit et accéder au pilotage →</button></div>
+</div>
+<div class="panel"><h2>Suggestions de correction</h2><div id="suggestions"></div></div>
+</section>
+
+<section id="run" class="page hidden">
+<div class="panel"><h1>Pilotage du circuit</h1><p class="sub" id="runSubtitle">Prêt à démarrer · Alternance atelier / course</p>
+<div class="run-screen">
+<div style="display:flex;justify-content:space-between;gap:10px"><b id="runCircuitName">Mon circuit training</b><span class="muted" id="lapLabel">Tour 1</span></div>
+<div class="muted" style="text-align:center;margin-top:16px;font-size:12px">TEMPS GLOBAL ÉCOULÉ</div>
+<div class="clock" id="globalClock">00:00</div>
+<div class="live-stats">
+<div class="live-stat"><span class="muted">FRÉQUENCE CARDIAQUE</span><b id="hrValue" style="color:#fb7185">--</b><small class="muted">bpm</small></div>
+<div class="live-stat"><span class="muted">VITESSE</span><b id="speedValue" style="color:#4ade80">--</b><small class="muted">km/h</small></div>
+<div class="live-stat"><span class="muted">TEMPS SÉQUENCE</span><b id="segmentClock">00:00</b><small class="muted">min:s</small></div>
+</div>
+<div class="muted" style="font-size:11px">SÉQUENCE EN COURS</div><div class="sequence" id="sequenceName">A1 · Pompes</div><div class="muted" id="sequenceDetail">Atelier 1 sur 8</div>
+<div class="progress" id="progress"></div>
+<div style="display:flex;justify-content:space-between" class="muted"><small id="progressLabel">0 / 16 séquences</small><small id="targetLabel">Objectif : 15 min</small></div>
+<div class="actions" style="margin-top:20px">
+<button class="green" id="startPause">Démarrer</button><button class="orange" id="nextSequence" disabled>Travail effectué →</button><button class="outline" id="stopRun">Terminer le circuit</button>
+</div>
+</div>
+<div class="actions">
+<button class="outline" id="connectHR">♥ Connecter brassard BLE</button><button class="outline" id="gpsButton">◎ Activer GPS</button><button class="outline" id="resetRun">Réinitialiser le chrono</button>
+</div>
+<p class="sub" id="sensorStatus" style="margin-top:10px">Capteurs non connectés. La réalisation manuelle reste entièrement disponible.</p>
+</div>
+<div class="panel"><h2>Journal des séquences</h2><div id="liveLog" class="sub">Aucune séquence terminée.</div></div>
+</section>
+
+<section id="report" class="page hidden">
+<div class="panel">
+<h1>Bilan de réalisation</h1><p class="sub">Données enregistrées pendant le circuit en cours.</p>
+<div id="reportSummary" class="meters"></div>
+<div class="panel rpe-panel" style="margin-top:18px">
+  <h2>Ressenti de l'effort · RPE séance</h2>
+  <p class="sub">Environ 30 minutes après la séance, demander : « Comment as-tu trouvé l'ensemble de la séance ? » Choisir une seule valeur qui représente l'effort global.</p>
+  <label for="sessionRPE">ÉCHELLE DE BORG CR10 MODIFIÉE (FOSTER)</label>
+  <select id="sessionRPE">
+    <option value="">— Évaluer le ressenti —</option>
+    <option value="0">0 · Repos</option>
+    <option value="1">1 · Très, très facile</option>
+    <option value="2">2 · Facile</option>
+    <option value="3">3 · Modéré</option>
+    <option value="4">4 · Assez difficile</option>
+    <option value="5">5 · Difficile</option>
+    <option value="6">6 · (intermédiaire, sans ancrage verbal)</option>
+    <option value="7">7 · Très difficile</option>
+    <option value="8">8 · (intermédiaire, sans ancrage verbal)</option>
+    <option value="9">9 · (intermédiaire, sans ancrage verbal)</option>
+    <option value="10">10 · Effort maximal</option>
+  </select>
+  <p class="sub" style="margin:8px 0 0">La charge interne de séance sera calculée automatiquement : RPE × durée de séance (en minutes), en unités arbitraires.</p>
+</div>
+<div class="panel oral-panel" style="margin-top:16px">
+  <h2>Bilan oral · Observations</h2>
+  <p class="sub">Dicte ton retour à voix haute ou saisis-le directement. Le texte sera intégré au bilan CSV.</p>
+  <textarea id="oralReview" rows="5" placeholder="Ex. : Bonne dynamique générale. Les ateliers de tirage étaient exigeants ; prévoir une adaptation sur le prochain circuit…"></textarea>
+  <div class="actions">
+    <button type="button" class="primary" id="dictateReview">🎙 Démarrer la dictée</button>
+    <button type="button" class="outline" id="stopDictation" disabled>Arrêter la dictée</button>
+    <span class="sub" id="dictationStatus" aria-live="polite">Dictée vocale selon les capacités du navigateur.</span>
+  </div>
+</div>
+<div style="overflow:auto;margin-top:15px"><table class="table"><thead><tr><th>Séquence</th><th>Type</th><th>Temps</th><th>FC moy.</th><th>Vitesse moy.</th></tr></thead><tbody id="reportRows"></tbody></table></div>
+<div class="actions"><button class="primary" id="exportCSV">Exporter le bilan CSV</button><button class="outline" id="backRun">Retour au pilotage</button></div>
+</div>
+</section>
+<footer>BAS · Balance · Autonomie · Santé — Outil de préparation et de suivi</footer>
+</main>
+
+<script>
+const EX={
+"Pompes":{a:3,p:0,u:3,l:0,t:2,alts:["Pompes inclinées","Pompes sur genoux","Développé élastique","Développé kettlebell au sol"]},
+"Pompes inclinées":{a:3,p:0,u:3,l:0,t:2,alts:["Pompes","Pompes sur genoux","Développé élastique"]},
+"Pompes sur genoux":{a:3,p:0,u:3,l:0,t:2,alts:["Pompes","Pompes inclinées","Développé élastique"]},
+"Développé élastique":{a:3,p:0,u:3,l:0,t:1,alts:["Pompes","Développé kettlebell au sol"]},
+"Développé kettlebell au sol":{a:3,p:0,u:3,l:0,t:1,alts:["Pompes","Développé élastique"]},
+"Burpees aménagés":{a:2,p:2,u:2,l:3,t:3,alts:["Squat thrust sans saut","Squat + extension des bras","Mountain climbers","Burpee avec marche arrière"]},
+"Squat thrust sans saut":{a:2,p:2,u:2,l:3,t:3,alts:["Burpees aménagés","Mountain climbers"]},
+"Squat + extension des bras":{a:2,p:2,u:2,l:3,t:2,alts:["Burpees aménagés","Thruster kettlebell"]},
+"Mountain climbers":{a:2,p:1,u:1,l:2,t:3,alts:["Burpees aménagés","Squat thrust sans saut"]},
+"Burpee avec marche arrière":{a:2,p:2,u:2,l:3,t:3,alts:["Burpees aménagés","Squat thrust sans saut"]},
+"Tire pull":{a:0,p:3,u:3,l:0,t:2,alts:["Rowing kettlebell","Tirage horizontal élastique","Traction horizontale","Tirage corde assis"]},
+"Rowing kettlebell":{a:0,p:3,u:3,l:0,t:2,alts:["Tire pull","Tirage horizontal élastique"]},
+"Tirage horizontal élastique":{a:0,p:3,u:3,l:0,t:2,alts:["Tire pull","Rowing kettlebell"]},
+"Traction horizontale":{a:0,p:3,u:3,l:0,t:2,alts:["Tire pull","Tirage horizontal élastique"]},
+"Tirage corde assis":{a:0,p:3,u:3,l:0,t:2,alts:["Tire pull","Rowing kettlebell"]},
+"Tire flip":{a:2,p:3,u:2,l:3,t:3,alts:["Soulevé de terre kettlebell","Squat chargé","Hip thrust","Soulevé de terre jambes semi-tendues"]},
+"Soulevé de terre kettlebell":{a:1,p:3,u:1,l:3,t:2,alts:["Tire flip","Hip thrust","Soulevé de terre jambes semi-tendues"]},
+"Squat chargé":{a:3,p:2,u:1,l:3,t:2,alts:["Tire flip","Squat + extension des bras"]},
+"Hip thrust":{a:0,p:3,u:0,l:3,t:1,alts:["Tire flip","Soulevé de terre kettlebell"]},
+"Soulevé de terre jambes semi-tendues":{a:0,p:3,u:1,l:3,t:2,alts:["Tire flip","Soulevé de terre kettlebell"]},
+"Farmer carry":{a:2,p:2,u:2,l:2,t:3,alts:["Suitcase carry","Marche unilatérale chargée","Maintien statique chargé","Marche avec élastique"]},
+"Suitcase carry":{a:2,p:2,u:2,l:2,t:3,alts:["Farmer carry","Marche unilatérale chargée"]},
+"Marche unilatérale chargée":{a:2,p:2,u:2,l:2,t:3,alts:["Farmer carry","Suitcase carry"]},
+"Maintien statique chargé":{a:2,p:2,u:2,l:0,t:3,alts:["Farmer carry","Suitcase carry"]},
+"Marche avec élastique":{a:2,p:2,u:1,l:2,t:3,alts:["Farmer carry","Suitcase carry"]},
+"Corde à sauter":{a:2,p:2,u:0,l:3,t:1,alts:["Petits rebonds sans corde","Corde alternée","Montées de genoux","Pogo jumps"]},
+"Petits rebonds sans corde":{a:2,p:2,u:0,l:3,t:1,alts:["Corde à sauter","Pogo jumps"]},
+"Corde alternée":{a:2,p:2,u:0,l:3,t:1,alts:["Corde à sauter","Petits rebonds sans corde"]},
+"Montées de genoux":{a:3,p:1,u:0,l:3,t:2,alts:["Corde à sauter","Pogo jumps"]},
+"Pogo jumps":{a:1,p:3,u:0,l:3,t:1,alts:["Corde à sauter","Petits rebonds sans corde"]},
+"SkiErg":{a:1,p:3,u:3,l:0,t:2,alts:["Tirage vertical élastique","Pull-over kettlebell","Tirage bras tendus","Tirage alterné élastique"]},
+"Tirage vertical élastique":{a:0,p:3,u:3,l:0,t:2,alts:["SkiErg","Tirage bras tendus"]},
+"Pull-over kettlebell":{a:1,p:3,u:2,l:0,t:2,alts:["SkiErg","Tirage bras tendus"]},
+"Tirage bras tendus":{a:0,p:3,u:3,l:0,t:2,alts:["SkiErg","Tirage vertical élastique"]},
+"Tirage alterné élastique":{a:0,p:3,u:3,l:0,t:2,alts:["SkiErg","Tirage vertical élastique"]},
+"Wall ball":{a:3,p:2,u:2,l:3,t:2,alts:["Thruster kettlebell","Squat + développé","Squat + lancer de ballon","Squat avec extension des bras"]},
+"Thruster kettlebell":{a:3,p:2,u:2,l:3,t:2,alts:["Wall ball","Squat + développé"]},
+"Squat + développé":{a:3,p:2,u:2,l:3,t:2,alts:["Wall ball","Thruster kettlebell"]},
+"Squat + lancer de ballon":{a:3,p:2,u:2,l:3,t:2,alts:["Wall ball","Squat avec extension des bras"]},
+"Squat avec extension des bras":{a:3,p:2,u:2,l:3,t:2,alts:["Wall ball","Squat + développé"]}
+};
+
+const CURATED={
+0:{mob:["Pompes avec déplacement des mains"],ton:["Pompes classiques"],force:["Pompes explosives","Pompes déclinées"],extra:"Poussée horizontale"},
+1:{mob:["Inchworm avec chien tête en bas"],ton:["Bear crawl","Crab walk"],force:["Burpee avec saut vertical"],extra:"Full body"},
+2:{mob:["Tirage élastique ample"],ton:["Rowing horizontal","Tirage unilatéral élastique"],force:["Rowing kettlebell chargé"],extra:"Tirage horizontal"},
+3:{mob:["Squat-to-stand avec ouverture de hanche"],ton:["Goblet squat"],force:["Soulevé de terre kettlebell","Fente arrière chargée"],extra:"Extension hanche/genou"},
+4:{mob:["Overhead carry léger"],ton:["Suitcase carry","Overhead carry unilatéral"],force:["Farmer carry lourd"],extra:"Portage et gainage"},
+5:{mob:["Pogo léger"],ton:["Corde à sauter pieds alternés"],force:["Sauts verticaux répétés","Sauts alternés latéraux"],extra:"Élasticité des membres inférieurs"},
+6:{mob:["Tirage bras tendus ample"],ton:["Tirage élastique vertical","Tirage ski alterné"],force:["SkiErg avec tirages puissants"],extra:"Tirage vertical"},
+7:{mob:["Squat profond + extension des bras"],ton:["Wall ball classique"],force:["Thruster kettlebell","Squat + lancer frontal de ballon"],extra:"Squat et poussée"}
+};
+
+EX["Pompes déclinées"]={a:3,p:0,u:3,l:0,t:2,alts:[]};
+EX["Crab walk"]={a:2,p:2,u:2,l:2,t:3,alts:[]};
+EX["Tirage unilatéral élastique"]={a:0,p:3,u:3,l:0,t:2,alts:[]};
+EX["Fente arrière chargée"]={a:2,p:3,u:1,l:3,t:2,alts:[]};
+EX["Overhead carry unilatéral"]={a:2,p:2,u:2,l:2,t:3,alts:[]};
+EX["Sauts alternés latéraux"]={a:2,p:2,u:0,l:3,t:2,alts:[]};
+EX["Tirage ski alterné"]={a:1,p:3,u:3,l:0,t:2,alts:[]};
+EX["Squat + lancer frontal de ballon"]={a:3,p:2,u:2,l:3,t:2,alts:[]};
+const defaults=["Pompes","Burpees aménagés","Tire pull","Tire flip","Farmer carry","Corde à sauter","SkiErg","Wall ball"];
+let cfg={intensity:"vert",quality:"Mobilité / fascia",name:"Mon circuit training",duration:15,rounds:"",start:1,exercises:[...defaults],distances:Array(8).fill(100)};
+let currentPage="config",running=false,startedAt=null,globalElapsed=0,segmentStarted=null,segmentElapsed=0,raf=null,sequenceIndex=0,completed=[],hr= null,speed=null,hrSamples=[],speedSamples=[],gpsWatch=null,lastPos=null,geoDistance=0;
+let dictation=null;
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,"0"),fmt=s=>pad(Math.floor(s/60))+":"+pad(Math.floor(s%60));
+function tab(name){currentPage=name;document.querySelectorAll(".page").forEach(p=>p.classList.toggle("hidden",p.id!==name));document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));if(name==="analysis")renderAnalysis();if(name==="run")renderRun();if(name==="report")renderReport();}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>tab(b.dataset.tab));
+function init(){
+$("startStation").innerHTML=Array.from({length:8},(_,i)=>`<option value="${i+1}">A${i+1}</option>`).join("");
+$("intensityChoices").querySelectorAll("button").forEach(b=>b.onclick=()=>{cfg.intensity=b.dataset.value;document.querySelectorAll("#intensityChoices button").forEach(x=>x.classList.toggle("selected",x===b));$("targetDuration").value={vert:15,orange:12,rouge:10}[cfg.intensity];cfg.duration=+$("targetDuration").value;});
+$("quality").onchange=e=>cfg.quality=e.target.value;
+$("circuitName").oninput=e=>cfg.name=e.target.value;
+$("targetDuration").oninput=e=>cfg.duration=+e.target.value;
+$("rounds").oninput=e=>cfg.rounds=e.target.value;
+$("startStation").onchange=e=>cfg.start=+e.target.value;
+renderStations();renderCourses();$("toAnalysis").onclick=()=>{readInputs();tab("analysis")};$("backConfig").onclick=()=>tab("config");$("validateCircuit").onclick=()=>{tab("run");resetRun()};
+$("saveConfig").onclick=saveConfig;$("resetConfig").onclick=()=>{if(confirm("Réinitialiser les choix et les exercices ?")){cfg={intensity:"vert",quality:"Mobilité / fascia",name:"Mon circuit training",duration:15,rounds:"",start:1,exercises:[...defaults],distances:Array(8).fill(100)};renderAll()}};
+$("startPause").onclick=toggleRun;$("nextSequence").onclick=nextSequence;$("stopRun").onclick=finishRun;$("resetRun").onclick=resetRun;
+$("connectHR").onclick=connectHR;$("gpsButton").onclick=startGPS;$("exportCSV").onclick=exportCSV;$("backRun").onclick=()=>tab("run");
+$("sessionRPE").onchange=renderReport;$("oralReview").oninput=()=>{};$("dictateReview").onclick=startDictation;$("stopDictation").onclick=stopDictation;
+}
+function renderAll(){
+document.querySelectorAll("#intensityChoices button").forEach(b=>b.classList.toggle("selected",b.dataset.value===cfg.intensity));
+$("quality").value=cfg.quality;$("circuitName").value=cfg.name;$("targetDuration").value=cfg.duration;$("rounds").value=cfg.rounds;$("startStation").value=cfg.start;
+renderStations();renderCourses();renderAnalysis();
+}
+function renderStations(){
+ $("stations").innerHTML=cfg.exercises.map((ex,i)=>{
+   const c=CURATED[i];
+   const options=[...new Set([defaults[i],...c.mob,...c.ton,...c.force,ex])];
+   const opt=(arr)=>arr.map(x=>`<option value="${escapeHTML(x)}" ${x===ex?"selected":""}>${escapeHTML(x)}</option>`).join("");
+   return `<div class="station" style="grid-template-columns:42px 1fr">
+     <div class="station-code">A${i+1}</div>
+     <div><strong>${escapeHTML(ex)}</strong><small>${c.extra} · ${chainText(ex)}</small></div>
+     <div style="grid-column:1/-1">
+       <label>ALTERNATIVE SELON LA QUALITÉ</label>
+       <select aria-label="Exercice A${i+1}" data-station="${i}">
+         <option value="${escapeHTML(defaults[i])}" ${ex===defaults[i]?"selected":""}>Référence · ${escapeHTML(defaults[i])}</option>
+         <optgroup label="Mobilité / fascia">${opt(c.mob)}</optgroup>
+         <optgroup label="Tonicité">${opt(c.ton)}</optgroup>
+         <optgroup label="Force">${opt(c.force)}</optgroup>
+         <option value="__other__">＋ Autre / personnalisé</option>
+       </select>
+
+       <details class="exercise-library" style="margin-top:12px;padding:12px;border:1px solid #34475e;border-radius:12px;background:#111c2a">
+         <summary style="cursor:pointer;font-weight:700;color:#c8d5e5">＋ Bibliothèque complète d'exercices</summary>
+         <p class="sub" style="margin:8px 0">Pour choisir un autre exercice dans la bibliothèque générale.</p>
+         <input type="search" id="library-search-${i}" placeholder="Rechercher un exercice…" style="margin-bottom:8px;width:100%">
+         <select id="library-select-${i}" style="width:100%">
+           <option value="">— Choisir dans la bibliothèque —</option>
+           ${Object.keys(EX).sort((a,b)=>a.localeCompare(b,"fr")).map(n=>`<option value="${escapeHTML(n)}" ${n===ex?"selected":""}>${escapeHTML(n)}</option>`).join("")}
+         </select>
+         <button type="button" class="secondary" data-library-apply="${i}" style="margin-top:8px">Utiliser cet exercice</button>
+       </details>
+
+       <div class="custom-entry hidden" id="custom-${i}" style="margin-top:10px;padding:12px;border:1px solid #34475e;border-radius:12px">
+         <label>NOM DE L'EXERCICE</label><input id="custom-name-${i}" placeholder="Nom de l'exercice">
+         <p class="sub" style="margin:8px 0">Profil de sollicitation : 0 = aucune · 1 = faible · 2 = moyenne · 3 = forte</p>
+         <div class="grid" style="grid-template-columns:repeat(5,minmax(0,1fr));gap:6px">
+           <div><label>Antérieure</label><select id="custom-a-${i}">${[0,1,2,3].map(n=>`<option>${n}</option>`).join("")}</select></div>
+           <div><label>Postérieure</label><select id="custom-p-${i}">${[0,1,2,3].map(n=>`<option>${n}</option>`).join("")}</select></div>
+           <div><label>Haut</label><select id="custom-u-${i}">${[0,1,2,3].map(n=>`<option>${n}</option>`).join("")}</select></div>
+           <div><label>Bas</label><select id="custom-l-${i}">${[0,1,2,3].map(n=>`<option>${n}</option>`).join("")}</select></div>
+           <div><label>Tronc</label><select id="custom-t-${i}">${[0,1,2,3].map(n=>`<option>${n}</option>`).join("")}</select></div>
+         </div>
+         <button class="primary" style="margin-top:10px" data-add-custom="${i}">Ajouter cet exercice</button>
+       </div>
+     </div>
+   </div>`;
+ }).join("");
+ $("stations").querySelectorAll('select[data-station]').forEach(sel=>sel.onchange=e=>{
+   let i=+e.target.dataset.station;
+   if(e.target.value==="__other__"){$("custom-"+i).classList.remove("hidden");return}
+   $("custom-"+i).classList.add("hidden");
+   cfg.exercises[i]=e.target.value;renderStations();renderAnalysis();
+ });
+ $("stations").querySelectorAll('input[id^="library-search-"]').forEach(input=>input.oninput=e=>{
+   const i=+e.target.id.split("-").pop(), q=e.target.value.toLocaleLowerCase("fr");
+   const sel=$("library-select-"+i), current=sel.value;
+   const names=Object.keys(EX).sort((a,b)=>a.localeCompare(b,"fr")).filter(n=>n.toLocaleLowerCase("fr").includes(q));
+   sel.innerHTML='<option value="">— Choisir dans la bibliothèque —</option>'+names.map(n=>`<option value="${escapeHTML(n)}">${escapeHTML(n)}</option>`).join("");
+   if(names.includes(current))sel.value=current;
+ });
+ $("stations").querySelectorAll("[data-library-apply]").forEach(btn=>btn.onclick=()=>{
+   const i=+btn.dataset.libraryApply, name=$("library-select-"+i).value;
+   if(!name){alert("Choisis d'abord un exercice dans la bibliothèque.");return}
+   cfg.exercises[i]=name;renderStations();renderAnalysis();
+ });
+ $("stations").querySelectorAll("[data-add-custom]").forEach(btn=>btn.onclick=()=>{
+   let i=+btn.dataset.addCustom,name=$("custom-name-"+i).value.trim();
+   if(!name){alert("Renseigne le nom de l'exercice.");return}
+   const prof={a:+$("custom-a-"+i).value,p:+$("custom-p-"+i).value,u:+$("custom-u-"+i).value,l:+$("custom-l-"+i).value,t:+$("custom-t-"+i).value,alts:[]};
+   EX[name]=prof;cfg.customProfiles=cfg.customProfiles||{};cfg.customProfiles[name]=prof;cfg.exercises[i]=name;
+   renderStations();renderAnalysis();
+ });
+}
+function chainText(ex){let x=EX[ex];if(!x)return "";let a=[];if(x.a)a.push("antérieure");if(x.p)a.push("postérieure");if(x.u)a.push("haut");if(x.l)a.push("bas");if(x.t>=2)a.push("tronc");return a.join(" · ")}
+function renderCourses(){$("courses").innerHTML=cfg.distances.map((d,i)=>`<div><label>COURSE C${i+1} · DISTANCE (M)</label><input type="number" min="1" max="10000" value="${d}" data-course="${i}"></div>`).join("");$("courses").querySelectorAll("input").forEach(x=>x.oninput=e=>cfg.distances[+e.target.dataset.course]=Math.max(1,+e.target.value||1))}
+function readInputs(){cfg.name=$("circuitName").value;cfg.duration=+$("targetDuration").value||15;cfg.rounds=$("rounds").value;cfg.start=+$("startStation").value;cfg.quality=$("quality").value}
+function metrics(){let sums={a:0,p:0,u:0,l:0,t:0};cfg.exercises.forEach(ex=>{let x=EX[ex];Object.keys(sums).forEach(k=>sums[k]+=x[k])});let max=8*3;return Object.fromEntries(Object.entries(sums).map(([k,v])=>[k,Math.round(v/max*100)]))}
+function renderAnalysis(){
+let m=metrics(),diff=Math.abs(m.a-m.p),alerts=[];
+if(m.u<25||m.l<25)alerts.push(["bad","Circuit non équilibré : sollicitation insuffisante du haut ou du bas du corps."]);
+if(diff>25)alerts.push(["warn",`Déficit de chaîne ${m.a<m.p?"antérieure":"postérieure"} : écart de ${diff} points entre les deux chaînes.`]);
+if(m.t<25)alerts.push(["warn","Sollicitation du tronc et de la stabilisation à renforcer."]);
+if(!alerts.length)alerts.push(["good","Aucune alerte majeure détectée par les règles actuelles. Vérifie néanmoins la pertinence des variantes et des charges."]);
+$("analysisAlerts").innerHTML=alerts.map(a=>`<div class="alert ${a[0]}">${a[1]}</div>`).join("");
+let names={a:"Chaîne antérieure",p:"Chaîne postérieure",u:"Haut du corps",l:"Bas du corps",t:"Tronc / stabilisation"};
+$("meters").innerHTML=Object.entries(names).map(([k,n])=>`<div class="meter"><span>${n}</span><b>${m[k]}%</b><div class="bar"><i style="width:${m[k]}%"></i></div></div>`).join("");
+let sugg=[];
+if(m.a<m.p-15)sugg.push("Renforcer la chaîne antérieure : envisager pompes, squat ou wall ball selon le segment manquant.");
+if(m.p<m.a-15)sugg.push("Renforcer la chaîne postérieure : envisager tire pull, tirage, hip thrust ou soulevé de terre.");
+if(m.u<25)sugg.push("Ajouter une poussée ou un tirage du haut du corps.");
+if(m.l<25)sugg.push("Ajouter un mouvement des membres inférieurs : squat, charnière de hanche ou travail élastique.");
+if(m.t<25)sugg.push("Ajouter un exercice de portage, de gainage ou de stabilisation.");
+$("suggestions").innerHTML=sugg.length?sugg.map(s=>`<div class="alert warn">${s}</div>`).join(""):'<div class="alert good">La répartition est satisfaisante au regard des seuils indicatifs de la V1.</div>';
+}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function saveConfig(){readInputs();localStorage.setItem("ctm-config-v1",JSON.stringify(cfg));$("saveStatus").textContent="Configuration enregistrée sur cet appareil";}
+function loadConfig(){try{let x=JSON.parse(localStorage.getItem("ctm-config-v1"));if(x){cfg={...cfg,...x};if(x.customProfiles)Object.entries(x.customProfiles).forEach(([n,p])=>EX[n]=p);}}catch(e){}}
+function sequenceAt(index){let station=(cfg.start-1+Math.floor(index/2))%8;return index%2===0?{type:"Atelier",code:"A"+(station+1),name:cfg.exercises[station],station}:{type:"Course",code:"C"+(station+1),name:cfg.distances[station]+" m",station}}
+function renderRun(){
+$("runCircuitName").textContent=cfg.name;$("targetLabel").textContent="Objectif : "+cfg.duration+" min";
+let total=cfg.rounds?Math.max(1,+cfg.rounds)*16:16;
+let seq=sequenceAt(sequenceIndex%16);$("sequenceName").textContent=seq.code+" · "+seq.name;$("sequenceDetail").textContent=seq.type+" · séquence "+(sequenceIndex+1)+" · tour "+(Math.floor(sequenceIndex/16)+1);
+$("lapLabel").textContent="Tour "+(Math.floor(sequenceIndex/16)+1)+(cfg.rounds?" / "+cfg.rounds:"");
+$("progressLabel").textContent=completed.length+" / "+(cfg.rounds?total:"16 par tour")+" séquences";
+$("progress").innerHTML=Array.from({length:16},(_,i)=>`<span class="${i<sequenceIndex%16||sequenceIndex>=16&&i<sequenceIndex%16?"done":i===sequenceIndex%16?"current":""}"></span>`).join("");
+$("nextSequence").disabled=!running;
+}
+function toggleRun(){if(!running){running=true;if(startedAt===null)startedAt=Date.now()-globalElapsed*1000;segmentStarted=Date.now()-segmentElapsed*1000;$("startPause").textContent="Pause";$("nextSequence").disabled=false;tick()}else{running=false;globalElapsed=(Date.now()-startedAt)/1000;segmentElapsed=(Date.now()-segmentStarted)/1000;$("startPause").textContent="Reprendre";cancelAnimationFrame(raf)}}
+function tick(){if(!running)return;globalElapsed=(Date.now()-startedAt)/1000;segmentElapsed=(Date.now()-segmentStarted)/1000;$("globalClock").textContent=fmt(globalElapsed);$("segmentClock").textContent=fmt(segmentElapsed);raf=requestAnimationFrame(tick)}
+function nextSequence(){if(!running)return;let seq=sequenceAt(sequenceIndex);completed.push({sequence:seq.code,name:seq.name,type:seq.type,time:segmentElapsed,hr:hrSamples.length?Math.round(hrSamples.reduce((a,b)=>a+b,0)/hrSamples.length):"",speed:speedSamples.length?(speedSamples.reduce((a,b)=>a+b,0)/speedSamples.length).toFixed(1):""});sequenceIndex++;segmentElapsed=0;segmentStarted=Date.now();hrSamples=[];speedSamples=[];if(cfg.rounds&&sequenceIndex>=cfg.rounds*16){finishRun();return}renderRun();renderLog()}
+function renderLog(){$("liveLog").innerHTML=completed.length?`<table class="table"><tr><th>Séquence</th><th>Temps</th><th>FC moy.</th><th>Vitesse</th></tr>${completed.map(x=>`<tr><td>${x.sequence} · ${escapeHTML(x.name)}</td><td>${fmt(x.time)}</td><td>${x.hr||"—"}</td><td>${x.speed?x.speed+" km/h":"—"}</td></tr>`).join("")}</table>`:"Aucune séquence terminée."}
+function finishRun(){if(running){globalElapsed=(Date.now()-startedAt)/1000;running=false;cancelAnimationFrame(raf)}$("startPause").textContent="Terminé";$("nextSequence").disabled=true;$("sensorStatus").textContent="Circuit terminé. Consulte le bilan pour exporter les données.";renderReport();tab("report")}
+function resetRun(){running=false;cancelAnimationFrame(raf);startedAt=null;globalElapsed=0;segmentStarted=null;segmentElapsed=0;sequenceIndex=0;completed=[];hrSamples=[];speedSamples=[];$("globalClock").textContent="00:00";$("segmentClock").textContent="00:00";$("startPause").textContent="Démarrer";$("nextSequence").disabled=true;renderRun();renderLog()}
+async function connectHR(){
+if(!navigator.bluetooth){$("sensorStatus").textContent="Web Bluetooth indisponible dans ce navigateur. Essaie Chrome sur Android ou ordinateur compatible.";return}
+try{let device=await navigator.bluetooth.requestDevice({filters:[{services:["heart_rate"]}]});let server=await device.gatt.connect();let service=await server.getPrimaryService("heart_rate");let ch=await service.getCharacteristic("heart_rate_measurement");await ch.startNotifications();ch.addEventListener("characteristicvaluechanged",e=>{let v=e.target.value;let flags=v.getUint8(0);hr=(flags&1)?v.getUint16(1,true):v.getUint8(1);$("hrValue").textContent=hr;hrSamples.push(hr)});$("sensorStatus").textContent="Brassard connecté : "+device.name;device.addEventListener("gattserverdisconnected",()=>$("sensorStatus").textContent="Brassard déconnecté.");}catch(e){$("sensorStatus").textContent="Connexion cardio non établie : "+e.message}
+}
+function startGPS(){
+if(!navigator.geolocation){$("sensorStatus").textContent="Géolocalisation indisponible.";return}
+if(gpsWatch!==null){navigator.geolocation.clearWatch(gpsWatch);gpsWatch=null;$("gpsButton").textContent="◎ Activer GPS";return}
+gpsWatch=navigator.geolocation.watchPosition(pos=>{let c=pos.coords;if(lastPos){let dt=(pos.timestamp-lastPos.t)/1000;let d=haversine(lastPos.lat,lastPos.lon,c.latitude,c.longitude);if(dt>0&&d>0){speed=Math.max(0,d/dt*3.6);if(c.accuracy<35){$("speedValue").textContent=speed.toFixed(1);speedSamples.push(speed)}}}lastPos={lat:c.latitude,lon:c.longitude,t:pos.timestamp};$("sensorStatus").textContent="GPS actif · précision "+Math.round(c.accuracy)+" m";},e=>$("sensorStatus").textContent="GPS : "+e.message,{enableHighAccuracy:true,maximumAge:1000});
+$("gpsButton").textContent="◎ Désactiver GPS";
+}
+function haversine(a,b,c,d){const R=6371000,p=x=>x*Math.PI/180;let x=p(c-a),y=p(d-b);return 2*R*Math.asin(Math.sqrt(Math.sin(x/2)**2+Math.cos(p(a))*Math.cos(p(c))*Math.sin(y/2)**2))}
+function renderReport(){
+ const rpe=$("sessionRPE").value;
+ const durationMin=globalElapsed/60;
+ const load=rpe===""?"—":(Number(rpe)*durationMin).toFixed(1)+" UA";
+ $("reportSummary").innerHTML=[
+  ["Durée écoulée",fmt(globalElapsed)],
+  ["Séquences validées",completed.length],
+  ["RPE séance",rpe===""?"—":rpe+"/10"],
+  ["Charge interne",load]
+ ].map(x=>`<div class="meter"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("");
+ $("reportRows").innerHTML=completed.map(x=>`<tr><td>${x.sequence} · ${escapeHTML(x.name)}</td><td>${x.type}</td><td>${fmt(x.time)}</td><td>${x.hr||"—"}</td><td>${x.speed?x.speed+" km/h":"—"}</td></tr>`).join("");
+}
+function startDictation(){
+ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SpeechRecognition){
+  $("dictationStatus").textContent="La dictée vocale n'est pas disponible ici. Utilise la dictée du clavier ou saisis le bilan.";
+  return;
+ }
+ if(dictation){stopDictation()}
+ dictation=new SpeechRecognition();
+ dictation.lang="fr-FR";dictation.continuous=true;dictation.interimResults=true;
+ dictation.onstart=()=>{$("dictationStatus").textContent="Écoute en cours…";$("dictateReview").disabled=true;$("stopDictation").disabled=false};
+ dictation.onresult=e=>{
+  let finalText="",interim="";
+  for(let i=e.resultIndex;i<e.results.length;i++){
+   const part=e.results[i][0].transcript;
+   if(e.results[i].isFinal)finalText+=part+" ";else interim+=part;
+  }
+  if(finalText){const area=$("oralReview");area.value=(area.value.trim()?area.value.trim()+" ":"")+finalText.trim();area.dispatchEvent(new Event("input"));}
+  $("dictationStatus").textContent=interim?"En cours : "+interim:"Dictée active — parle naturellement.";
+ };
+ dictation.onerror=e=>{$("dictationStatus").textContent="Dictée interrompue : "+e.error+". Tu peux compléter le texte manuellement.";$("dictateReview").disabled=false;$("stopDictation").disabled=true;dictation=null};
+ dictation.onend=()=>{$("dictationStatus").textContent="Dictée terminée. Tu peux relire et corriger le texte."; $("dictateReview").disabled=false;$("stopDictation").disabled=true;dictation=null};
+ try{dictation.start()}catch(e){$("dictationStatus").textContent="Impossible de démarrer la dictée : "+e.message;dictation=null}
+}
+function stopDictation(){
+ if(dictation){const d=dictation;dictation=null;try{d.stop()}catch(e){}}
+ $("dictateReview").disabled=false;$("stopDictation").disabled=true;
+}
+function exportCSV(){
+ const rpe=$("sessionRPE").value;
+ const durationMin=globalElapsed/60;
+ const load=rpe===""?"":(Number(rpe)*durationMin).toFixed(1);
+ const review=$("oralReview").value.trim();
+ let rows=[
+  ["Programme","BAS — Balance · Autonomie · Santé"],
+  ["Circuit",cfg.name],["Intensité",cfg.intensity],["Qualité",cfg.quality],
+  ["Durée globale (s)",globalElapsed],["RPE séance (Borg CR10 modifiée)",rpe],
+  ["Charge interne RPE × durée (UA)",load],
+  ["Bilan oral retranscrit",review],[],
+  ["Séquence","Type","Nom","Temps (s)","FC moyenne (bpm)","Vitesse moyenne (km/h)"],
+  ...completed.map(x=>[x.sequence,x.type,x.name,x.time,x.hr,x.speed])
+ ];
+ let csv=rows.map(r=>r.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(";")).join("\n");
+ let blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});
+ let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="BAS-bilan-circuit.csv";a.click();URL.revokeObjectURL(a.href);
+}
+loadConfig();init();renderAll();renderRun();renderLog();
+</script>
+</body></html>
